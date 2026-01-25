@@ -1,9 +1,23 @@
+// This page shows the cart UI (items list + summary).
+// Most of the "business logic" (calculations, updating quantities) is handled elsewhere (App reducer).
+
 import React from "react";
+
+// Link is used to navigate back to the menu without a full page reload.
 import { Link } from "react-router-dom";
+
+// CartItem is a reusable component that displays one item row in the cart.
 import CartItem from "../components/CartItem";
 
 const Cart = ({ cart, onRemove, onUpdate }) => {
+  // `cart` is expected to be an object like: { cartItems: [...], total: number }
+  // Optional chaining (?.) prevents crashes if cart is undefined.
+  // If cart is missing, we fallback to an empty list.
   const items = cart?.cartItems || [];
+
+  // Nullish coalescing (??) means:
+  // - use cart.total if it's not null/undefined
+  // - otherwise use 0
   const total = cart?.total ?? 0;
 
   return (
@@ -13,11 +27,13 @@ const Cart = ({ cart, onRemove, onUpdate }) => {
           <div>
             <h2 className="cart-page__title">Your cart</h2>
             <p className="cart-page__subtitle">
+              {/* Conditional text: different message when cart is empty */}
               {items.length === 0
                 ? "Start adding dishes from the menu."
                 : "Review items, apply offers, then checkout."}
             </p>
           </div>
+          {/* Only show the "Continue shopping" button when there are items */}
           {items.length > 0 && (
             <Link to="/" className="btn btn-zomato-outline cart-page__back">
               Continue shopping
@@ -25,6 +41,10 @@ const Cart = ({ cart, onRemove, onUpdate }) => {
           )}
         </div>
 
+        {/* Conditional rendering:
+            If cart is empty -> show empty state
+            Else -> show items + summary
+        */}
         {items.length === 0 ? (
           <div className="z-card cart-empty">
             <div className="cart-empty__inner">
@@ -48,16 +68,20 @@ const Cart = ({ cart, onRemove, onUpdate }) => {
                     <span className="cart-card__count">({items.length})</span>
                   </div>
                   <small className="cart-card__note">
-                    {/* Quantity & price updates are handled by your logic. */}
+                    {/* This is just UI text; your reducer/handlers control actual updates */}
                   </small>
                 </div>
 
                 <div className="cart-card__body">
+                  {/* Render one CartItem for each item in the cart */}
                   {items.map((item) => (
                     <CartItem
+                      // Pass callbacks down so buttons inside CartItem can call them.
                       onUpdate={onUpdate}
                       onRemove={onRemove}
+                      // key helps React track list items efficiently
                       key={item.id}
+                      // item is the data object for that row
                       item={item}
                     />
                   ))}
@@ -94,6 +118,7 @@ const Cart = ({ cart, onRemove, onUpdate }) => {
                   </div>
 
                   <div className="cart-summary__lines">
+                    {/* Summary line: subtotal (we display the total passed in) */}
                     <div className="cart-line">
                       <span className="cart-line__label">Subtotal</span>
                       <span className="cart-line__value">₹{total}</span>
