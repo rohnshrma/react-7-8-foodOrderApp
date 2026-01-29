@@ -13,6 +13,8 @@ import { BrowserRouter } from "react-router-dom";
 
 // App is our top-level component (the "root component") that contains the navbar + routes.
 import App from "./App.jsx";
+import CartProvider from "./context/CartContext.jsx";
+import DishProvider from "./context/DishContext.jsx";
 
 // document.getElementById("root") finds the <div id="root"></div> in index.html.
 // That is the single DOM node where the entire React app will be rendered.
@@ -21,8 +23,12 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     {/* BrowserRouter wraps your app so that <Link>, <Routes>, and <Route> work. */}
     <BrowserRouter>
-      {/* App is the component that contains all your pages and navigation. */}
-      <App />
+      <DishProvider>
+        <CartProvider>
+          {/* App is the component that contains all your pages and navigation. */}
+          <App />
+        </CartProvider>
+      </DishProvider>
     </BrowserRouter>
   </StrictMode>
 );

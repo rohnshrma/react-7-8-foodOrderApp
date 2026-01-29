@@ -1,8 +1,8 @@
 // This page shows a form to add a new dish/product.
 // It uses a reducer to manage many input fields as a single state object.
 
-import React, { useReducer } from "react";
-
+import React, { useReducer, useContext } from "react";
+import { DishContext } from "../context/DishContext";
 // Bootstrap CSS for layout + form styling (inputs, grid, etc.)
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -65,7 +65,8 @@ const dishReducer = (state, action) => {
 //
 // Props:
 // - onAdd: a function from the parent (App) that receives the new dish object
-const AddProduct = ({ onAdd }) => {
+const AddProduct = () => {
+  const { addNewDishHandler } = useContext(DishContext);
   // useReducer returns:
   // - dish: current state object for the form fields
   // - dispatch: function to send actions to the reducer
@@ -98,7 +99,7 @@ const AddProduct = ({ onAdd }) => {
 
     // Create a new dish object. We copy current form state and attach an id.
     // We call onAdd so parent component can add it to the menu list.
-    onAdd({ ...dish, id: uuidv4() });
+    addNewDishHandler({ ...dish, id: uuidv4() });
 
     // After submission, reset the form.
     resetHandler();

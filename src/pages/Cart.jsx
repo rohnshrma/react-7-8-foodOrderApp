@@ -1,7 +1,8 @@
 // This page shows the cart UI (items list + summary).
 // Most of the "business logic" (calculations, updating quantities) is handled elsewhere (App reducer).
 
-import React from "react";
+import React, { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 // Link is used to navigate back to the menu without a full page reload.
 import { Link } from "react-router-dom";
@@ -9,7 +10,9 @@ import { Link } from "react-router-dom";
 // CartItem is a reusable component that displays one item row in the cart.
 import CartItem from "../components/CartItem";
 
-const Cart = ({ cart, onRemove, onUpdate }) => {
+const Cart = () => {
+  const { cart } = useContext(CartContext);
+
   // `cart` is expected to be an object like: { cartItems: [...], total: number }
   // Optional chaining (?.) prevents crashes if cart is undefined.
   // If cart is missing, we fallback to an empty list.
@@ -76,10 +79,6 @@ const Cart = ({ cart, onRemove, onUpdate }) => {
                   {/* Render one CartItem for each item in the cart */}
                   {items.map((item) => (
                     <CartItem
-                      // Pass callbacks down so buttons inside CartItem can call them.
-                      onUpdate={onUpdate}
-                      onRemove={onRemove}
-                      // key helps React track list items efficiently
                       key={item.id}
                       // item is the data object for that row
                       item={item}

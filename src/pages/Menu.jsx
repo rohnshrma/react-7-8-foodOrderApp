@@ -5,13 +5,15 @@ import React from "react";
 
 // MenuCard is a reusable component that displays a single dish.
 import MenuCard from "../components/MenuCard";
-
+import { useContext } from "react";
+import { DishContext } from "../context/DishContext";
 // Menu is a React component.
 //
 // Props (inputs from parent):
 // - dishes: an array of dish objects to display
 // - onAddToCart: a function to call when user clicks "Add to cart" on a card
-const Menu = ({ dishes, onAddToCart }) => {
+const Menu = () => {
+  const { dishes } = useContext(DishContext);
   // The return value of a component is JSX (a syntax that looks like HTML).
   // JSX is converted to JavaScript under the hood by the build tool.
   return (
@@ -33,14 +35,7 @@ const Menu = ({ dishes, onAddToCart }) => {
           {dishes.map((dish) => {
             // "key" is required by React when rendering a list.
             // It helps React efficiently update the DOM when items change.
-            return (
-              <MenuCard
-                dish={dish}
-                key={dish.id}
-                // Pass the click handler down so the card can call it.
-                onAddToCart={onAddToCart}
-              />
-            );
+            return <MenuCard dish={dish} key={dish.id} />;
           })}
         </div>
       </div>

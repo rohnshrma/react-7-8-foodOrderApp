@@ -1,22 +1,25 @@
 // This file defines a reusable "MenuCard" component.
 // Each card displays one dish and a button to add it to cart.
 
-import React from "react";
+import React, { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 // MenuCard is a React component that receives props (inputs).
 //
 // Props:
 // - dish: an object like { id, name, price, imageUrl, description, type, category }
 // - onAddToCart: a function provided by the parent (App/Menu) to handle adding to cart
-const MenuCard = ({ dish, onAddToCart }) => {
+const MenuCard = ({ dish }) => {
   // Destructuring pulls properties from the dish object into local variables.
   // This is just convenience so we can write "name" instead of "dish.name".
   const { name, price, imageUrl, description, type, category } = dish;
 
+  const { addDishToCart } = useContext(CartContext);
+
   // clickHandler is called when user clicks the "Add to cart" button.
   // We call the parent-provided function and pass it the current dish.
   const clickHandler = () => {
-    onAddToCart(dish);
+    addDishToCart(dish);
   };
 
   // Return the JSX for one card.
@@ -28,11 +31,7 @@ const MenuCard = ({ dish, onAddToCart }) => {
         {/* Media section (image + badges overlay) */}
         <div className="z-card__media">
           {/* Image */}
-          <img
-            src={imageUrl}
-            className="card-img-top z-card__img"
-            alt={name}
-          />
+          <img src={imageUrl} className="card-img-top z-card__img" alt={name} />
 
           {/* Badges row that sits on the image */}
           <div className="z-card__badges">

@@ -1,13 +1,16 @@
 // This file defines one cart row UI (a single item inside the cart).
 // It is a presentational component: it shows data and calls callbacks when buttons are clicked.
 
-import React from "react";
+import React, { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 // Props:
 // - item: the cart item object (id, name, price, imageUrl, category, type, quantity)
 // - onRemove: callback to remove the item from cart
 // - onUpdate: callback to change quantity (+1 or -1)
-const CartItem = ({ item, onRemove, onUpdate }) => {
+const CartItem = ({ item }) => {
+  const { removeFromCart, updateCartHandler } = useContext(CartContext);
+
   // item || {} prevents errors if item is undefined.
   // Destructure to get properties we need.
   const { id, name, price, imageUrl, category, type, quantity } = item || {};
@@ -54,7 +57,7 @@ const CartItem = ({ item, onRemove, onUpdate }) => {
             aria-label="Remove item"
             onClick={() => {
               // Call parent callback with the id so parent can remove it from state.
-              onRemove(id);
+              removeFromCart(id);
             }}
           >
             ×
@@ -75,7 +78,7 @@ const CartItem = ({ item, onRemove, onUpdate }) => {
               onClick={() => {
                 // Tell parent to update this item's quantity by -1.
                 // Parent reducer decides what to do (e.g., remove if quantity reaches 0).
-                onUpdate({ id, update: -1 });
+                updateCartHandler({ id, update: -1 });
               }}
             >
               −
@@ -89,7 +92,7 @@ const CartItem = ({ item, onRemove, onUpdate }) => {
               aria-label="Increase quantity"
               onClick={() => {
                 // Tell parent to update quantity by +1.
-                onUpdate({ id, update: +1 });
+                updateCartHandler({ id, update: +1 });
               }}
             >
               +
